@@ -1,5 +1,7 @@
 import { Request } from "express";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
+import { User } from "../model";
+import jwt from "jsonwebtoken";
 
 enum SignupResultCode {
   ArleadyExists = 0,
@@ -7,32 +9,70 @@ enum SignupResultCode {
   InternalError = 2,
 }
 
-const signup = async (req: Request): Promise<{signupResult: SignupResultCode, newUser?: typeof User}> => {
+type SignupResult = {
+  signupResultCode: SignupResultCode;
+  newUser?: typeof User;
+};
+
+const signup = async (req: Request): Promise<SignupResult> => {
   const { User } = req.app.get("models");
   try {
     const { email, password, name } = req.body;
 
-    // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return { signupResult: SignupResultCode.ArleadyExists };
+      return { signupResultCode: SignupResultCode.ArleadyExists };
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({
+      email,
+      password: hashedPassword,
+      name,
+    });
 
-    // Create a new user
-    const newUser = await User.create({ email, password: hashedPassword, name });
-
-    // Send response
-    return { signupResult: SignupResultCode.Created, newUser };
+    return { signupResultCode: SignupResultCode.Created, newUser };
   } catch (err) {
     console.error(err);
-    return { signupResult: SignupResultCode.InternalError };
+    return { signupResultCode: SignupResultCode.InternalError };
   }
 };
 
-export {
-  signup,
-  SignupResultCode as SignupResponse
+enum LoginResultCode {
+  NotFound = 0,
+  InvalidPassword = 1,
+  Authenticated = 2,
+  InternalError = 3,
+}
+type LoginResult = { loginResultCode: LoginResultCode; token?: string };
+
+const login = async (req: Request): Promise<LoginResult> => {
+  const { User } = req.app.get("models");
+
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return { loginResultCode: LoginResultCode.NotFound };
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return { loginResultCode: LoginResultCode.InvalidPassword };
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET || "your_secret_key",
+      { expiresIn: "1h" }
+    );
+
+    return { loginResultCode: LoginResultCode.Authenticated, token };
+  } catch (err) {
+    console.error(err);
+    return { loginResultCode: LoginResultCode.InternalError };
+  }
 };
+
+export { signup, login, SignupResultCode, LoginResultCode };

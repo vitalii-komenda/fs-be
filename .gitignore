@@ -1,2 +1,4 @@
 /node_modules
 /dist
+/Insomnia_endpoints.json
+/database.sqlite3

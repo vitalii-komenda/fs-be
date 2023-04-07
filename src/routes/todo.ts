@@ -1,6 +1,11 @@
 import { Router, Request, Response } from "express";
 import getUser from "../middleware/get-user";
-import { getTodos, deleteTodo, updateTodo, createTodo } from "../controllers/todo";
+import {
+  getTodos,
+  deleteTodo,
+  updateTodo,
+  createTodo,
+} from "../controllers/todo";
 
 const todoRouter = Router();
 

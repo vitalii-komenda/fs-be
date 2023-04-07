@@ -30,9 +30,4 @@ const createTodo = async (req: Request & { user: { id: number } }) => {
   return await Todo.create({ title: req.body.title, UserId: req.user.id });
 };
 
-export {
-  getTodos,
-  deleteTodo,
-  updateTodo,
-  createTodo,
-};
+export { getTodos, deleteTodo, updateTodo, createTodo };

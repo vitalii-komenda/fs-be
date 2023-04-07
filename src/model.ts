@@ -49,8 +49,4 @@ Todo.init(
 User.hasMany(Todo, { as: "User", foreignKey: "UserId" });
 Todo.belongsTo(User, { as: "User" });
 
-export {
-  sequelize,
-  User,
-  Todo,
-};
+export { sequelize, User, Todo };
