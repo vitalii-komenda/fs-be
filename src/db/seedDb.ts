@@ -1,4 +1,4 @@
-const { User, Todo } = require("../src/model");
+import { User, Todo } from "../model";
 
 /* WARNING THIS WILL DROP THE CURRENT DATABASE */
 seed();
@@ -12,6 +12,8 @@ async function seed() {
     User.create({
       id: 1,
       name: "Vitalii",
+      email: "vitalii@foo.com",
+      password: "123",
     }),
     Todo.create({
       id: 1,
