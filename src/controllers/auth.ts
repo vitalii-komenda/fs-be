@@ -1,7 +1,7 @@
 import { Request } from "express";
 import bcrypt from "bcryptjs";
 import { User } from "../model";
-import jwt from "jsonwebtoken";
+import { checkPassword, encryptPassword, generateToken } from "../services/token";
 
 enum SignupResultCode {
   ArleadyExists = 0,
@@ -24,7 +24,7 @@ const signup = async (req: Request): Promise<SignupResult> => {
       return { signupResultCode: SignupResultCode.ArleadyExists };
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await encryptPassword(password);
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -57,16 +57,12 @@ const login = async (req: Request): Promise<LoginResult> => {
       return { loginResultCode: LoginResultCode.NotFound };
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await checkPassword(password, user.password);
     if (!isPasswordValid) {
       return { loginResultCode: LoginResultCode.InvalidPassword };
     }
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || "your_secret_key",
-      { expiresIn: "1h" }
-    );
+    const token = await generateToken(user.id, user.email);
 
     return { loginResultCode: LoginResultCode.Authenticated, token };
   } catch (err) {

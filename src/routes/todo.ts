@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import getUser from "../middleware/get-user";
+import authenticate from "../middleware/authenticate";
 import {
   getTodos,
   deleteTodo,
@@ -10,14 +10,14 @@ import {
 const todoRouter = Router();
 
 // listTodos
-todoRouter.get("/todos", getUser, async (req: Request, res: Response) => {
+todoRouter.get("/todos", authenticate, async (req: Request, res: Response) => {
   const todos = await getTodos(req);
   if (!todos.length) return res.status(404).end();
   res.json(todos);
 });
 
 // deleteTodo
-todoRouter.delete("/todos", getUser, async (req: Request, res: Response) => {
+todoRouter.delete("/todos", authenticate, async (req: Request, res: Response) => {
   const amount = await deleteTodo(req);
 
   if (amount === 0) {
@@ -28,7 +28,7 @@ todoRouter.delete("/todos", getUser, async (req: Request, res: Response) => {
 });
 
 // markTodoCompleted / markTodoUncompleted
-todoRouter.put("/todos/:id", getUser, async (req: Request, res: Response) => {
+todoRouter.put("/todos/:id", authenticate, async (req: Request, res: Response) => {
   const todo = await updateTodo(req);
 
   if (!todo) {
@@ -39,7 +39,7 @@ todoRouter.put("/todos/:id", getUser, async (req: Request, res: Response) => {
 });
 
 // createTodo
-todoRouter.post("/todos", getUser, async (req: Request, res: Response) => {
+todoRouter.post("/todos", authenticate, async (req: Request, res: Response) => {
   const todo = await createTodo(req);
 
   return res.status(200).json(todo);
