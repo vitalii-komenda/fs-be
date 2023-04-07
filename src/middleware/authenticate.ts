@@ -2,13 +2,17 @@ import { NextFunction, Request, Response } from "express";
 import { checkToken } from "../services/token";
 import { JwtPayload } from "jsonwebtoken";
 
-const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { User, Todo } = req.app.get("models");
-  const token = req.header('x-access-token');
+  const token = req.header("x-access-token");
 
   if (!token) {
     return res.status(401).json({
-      message: 'Unauthorized Access'
+      message: "Unauthorized Access",
     });
   }
 
@@ -22,7 +26,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
       "defaultScope",
       {
         where: {
-          UserId: result.userId
+          UserId: result.userId,
         },
       },
       { override: true }
@@ -33,7 +37,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
     console.error(e);
 
     return res.status(401).json({
-      message: 'Unauthorized Access'
+      message: "Unauthorized Access",
     });
   }
 };

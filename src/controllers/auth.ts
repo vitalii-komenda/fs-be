@@ -1,7 +1,11 @@
 import { Request } from "express";
 import bcrypt from "bcryptjs";
 import { User } from "../model";
-import { checkPassword, encryptPassword, generateToken } from "../services/token";
+import {
+  checkPassword,
+  encryptPassword,
+  generateToken,
+} from "../services/token";
 
 enum SignupResultCode {
   ArleadyExists = 0,
