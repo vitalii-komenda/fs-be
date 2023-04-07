@@ -12,7 +12,6 @@ const todoRouter = Router();
 // listTodos
 todoRouter.get("/todos", authenticate, async (req: Request, res: Response) => {
   const todos = await getTodos(req);
-  if (!todos.length) return res.status(404).end();
   res.json(todos);
 });
 
