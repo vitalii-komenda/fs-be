@@ -11,13 +11,13 @@ async function seed() {
   await Promise.all([
     User.create({
       id: 1,
-      name: 'Vitalii'
+      name: "Vitalii",
     }),
     Todo.create({
       id: 1,
-      title: 'Buy apples',
+      title: "Buy apples",
       completed: false,
       UserId: 1,
-    })
+    }),
   ]);
 }

@@ -8,22 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = __importDefault(require("./app"));
-init();
-function init() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            app_1.default.listen(3001, () => {
-                console.log("Express App Listening on Port 3001");
-            });
-        }
-        catch (error) {
-            console.error(`An error occurred: ${JSON.stringify(error)}`);
-            process.exit(1);
-        }
-    });
-}
+const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { User } = req.app.get("models");
+    const userId = req.get("user_id") || 0;
+    const user = yield User.findOne({ where: { id: userId } });
+    if (!user)
+        return res.status(401).end();
+    req.user = user;
+    // Contract.addScope(
+    //   "defaultScope",
+    //   {
+    //     where: {
+    //       [Op.or]: [{ ClientId: userId }, { ContractorId: userId }],
+    //     },
+    //   },
+    //   { override: true }
+    // );
+    next();
+});
+exports.default = getUser;

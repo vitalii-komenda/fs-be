@@ -1,4 +1,4 @@
-import {Request} from 'express';
+import { Request } from "express";
 
 const getTodos = async (req: Request) => {
   const { Todo } = req.app.get("models");
@@ -8,9 +8,11 @@ const getTodos = async (req: Request) => {
 const deleteTodo = async (req: Request) => {
   const { Todo } = req.app.get("models");
 
-  return await Todo.destroy({where:{
-    id: req.body.id
-  }});
+  return await Todo.destroy({
+    where: {
+      id: req.body.id,
+    },
+  });
 };
 
 const updateTodo = async (req: Request) => {
@@ -18,19 +20,17 @@ const updateTodo = async (req: Request) => {
 
   return await Todo.update(
     { completed: req.body.completed },
-    { where: { id: req.params.id } },
+    { where: { id: req.params.id } }
   );
 };
 
-const createTodo = async (req: Request & {user: {id: number}}) => {
+const createTodo = async (req: Request & { user: { id: number } }) => {
   const { Todo } = req.app.get("models");
 
-  return await Todo.create(
-    { title: req.body.title, UserId: req.user.id }
-  );
+  return await Todo.create({ title: req.body.title, UserId: req.user.id });
 };
 
-module.exports = {
+export {
   getTodos,
   deleteTodo,
   updateTodo,

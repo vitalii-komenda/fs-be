@@ -1,4 +1,4 @@
-import {Sequelize, Model, DataTypes} from "sequelize";
+import { Sequelize, Model, DataTypes } from "sequelize";
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -38,12 +38,10 @@ Todo.init(
   }
 );
 
-
 User.hasMany(Todo, { as: "User", foreignKey: "UserId" });
 Todo.belongsTo(User, { as: "User" });
 
-
-module.exports = {
+export {
   sequelize,
   User,
   Todo,
