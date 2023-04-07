@@ -1,15 +1,15 @@
-const Sequelize = require("sequelize");
+import {Sequelize, Model, DataTypes} from "sequelize";
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./database.sqlite3",
 });
 
-class User extends Sequelize.Model {}
+class User extends Model {}
 User.init(
   {
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
@@ -19,15 +19,15 @@ User.init(
   }
 );
 
-class Todo extends Sequelize.Model {}
+class Todo extends Model {}
 Todo.init(
   {
     title: {
-      type: Sequelize.TEXT,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     completed: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: false,
     },

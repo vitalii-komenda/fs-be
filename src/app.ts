@@ -1,4 +1,4 @@
-const express = require("express");
+import express, { Express, Request, Response } from 'express';
 const bodyParser = require("body-parser");
 const { sequelize } = require("./model");
 const { getProfile } = require("./middleware/getProfile");
@@ -15,14 +15,14 @@ app.set("models", sequelize.models);
 
 
 // listTodos
-app.get("/todos", getProfile, async (req, res) => {
+app.get("/todos", getProfile, async (req: Request, res: Response) => {
   const todos = await getTodos(req);
   if (!todos.length) return res.status(404).end();
   res.json(todos);
 });
 
 // deleteTodo
-app.delete("/todos", getProfile, async (req, res) => {
+app.delete("/todos", getProfile, async (req: Request, res: Response) => {
   const amount = await deleteTodo(req);
 
   if (amount === 0) {
@@ -33,7 +33,7 @@ app.delete("/todos", getProfile, async (req, res) => {
 });
 
 // markTodoCompleted / markTodoUncompleted
-app.put("/todos/:id", getProfile, async (req, res) => {
+app.put("/todos/:id", getProfile, async (req: Request, res: Response) => {
   const todo = await updateTodo(req);
 
   if (!todo) {
@@ -44,7 +44,7 @@ app.put("/todos/:id", getProfile, async (req, res) => {
 });
 
 // createTodo
-app.post("/todos", getProfile, async (req, res) => {
+app.post("/todos", getProfile, async (req: Request, res: Response) => {
   const todo = await createTodo(req);
 
   return res.status(200).json(todo);

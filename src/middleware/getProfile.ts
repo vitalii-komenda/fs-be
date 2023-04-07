@@ -1,7 +1,6 @@
-const { Op } = require("sequelize");
-const { Contract } = require("../model");
+import { Request, Response } from 'express';
 
-const getProfile = async (req, res, next) => {
+const getProfile = async (req: Request, res: Response, next: () => {}) => {
   const { User } = req.app.get("models");
   const userId = req.get("user_id") || 0;
 

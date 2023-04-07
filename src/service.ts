@@ -1,9 +1,11 @@
-const getTodos = async (req) => {
+import {Request} from 'express';
+
+const getTodos = async (req: Request) => {
   const { Todo } = req.app.get("models");
   return await Todo.findAll();
 };
 
-const deleteTodo = async (req) => {
+const deleteTodo = async (req: Request) => {
   const { Todo } = req.app.get("models");
 
   return await Todo.destroy({where:{
@@ -11,7 +13,7 @@ const deleteTodo = async (req) => {
   }});
 };
 
-const updateTodo = async (req) => {
+const updateTodo = async (req: Request) => {
   const { Todo } = req.app.get("models");
 
   return await Todo.update(
@@ -20,7 +22,7 @@ const updateTodo = async (req) => {
   );
 };
 
-const createTodo = async (req) => {
+const createTodo = async (req: Request & {user: {id: number}}) => {
   const { Todo } = req.app.get("models");
 
   return await Todo.create(
